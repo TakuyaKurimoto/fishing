@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\Like;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -17,16 +19,26 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
+        
+
         $query = Post::query();
         $keyword = $request->input('keyword');
-
-
         if (!empty($keyword)) {
             $query->where('tag', 'LIKE', "%{$keyword}%");       
+        
+            $posts = $query->orderBy('created_at', 'desc')->paginate(5);
         }
-        $posts = $query->paginate(1);
+        else{
+            $posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(5);
+        }
+        //記事をいいね数で並び替え
+        //参考https://qiita.com/Ioan/items/bac58de02b826ae8e9e9
+        $countLike = Post::withCount('users')
+        ->orderBy('users_count', 'desc')
+        ->get();
+
  
-        return view('posts.index', compact('posts', 'keyword'));
+        return view('posts.index', compact('posts', 'keyword','countLike',));
         
         
     }
@@ -52,6 +64,13 @@ class PostsController extends Controller
     {
         $id = Auth::id();
         //インスタンス作成
+        $request->validate([
+            'title' => 'required|max:50',
+            'body' => 'required|max:2000',
+            'tag'  => 'required|max:50',
+        ]);
+
+
         $post = new Post();
         
         $post->body = $request->body;
@@ -108,14 +127,14 @@ class PostsController extends Controller
         //レコードを検索
         $post = Post::findOrFail($id);
         
-        $post->body = $request->body;
+        $post->body = $request->　body;
         $post->tag = $request->tag;
         $post->title = $request->title;
         
         //保存（更新）
         $post->save();
         
-        return redirect()->to('/posts');
+        return redirect()->to('/');
         
     }
 
@@ -133,7 +152,12 @@ class PostsController extends Controller
         $post->comments()->delete();
         $post->delete();
     });    
-}
+    return redirect()->to('/');
+    }
+   
+   
+    
 
 
 }
+

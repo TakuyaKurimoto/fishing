@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,6 +9,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
+    
+    protected $dates = [
+        'created_at',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -36,4 +40,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    // ユーザーがいいねしている投稿
+    public function favorites()
+    {
+        return $this->belongsToMany('App\Post')->withTimestamps();
+    }
 }

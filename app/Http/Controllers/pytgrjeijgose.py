@@ -13,7 +13,7 @@ for i in range(n):
         b=a[i]
     B.append(b)
 B=sorted(B)
-print(B)
+
 ans=0
 for i in range(n-1):
 

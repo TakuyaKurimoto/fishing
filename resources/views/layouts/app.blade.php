@@ -22,7 +22,7 @@
     <!-- Styles -->
     
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -75,6 +75,9 @@
                                 <a class="dropdown-item" href="{{ route('home') }}">
                                     {{ __('Home') }}
                                 </a>
+                                <a class="dropdown-item" href="{{ route('user.index') }}">
+                                    {{ __('UserInformation') }}
+                                </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
@@ -96,7 +99,9 @@
         
 
         <main id="mainpart" class="py-4">
+        
             @yield('content')
+        
         </main>
     </div>
     @include('layouts.app_script')
