@@ -37,3 +37,9 @@ Route::get('/user/userEdit', 'App\Http\Controllers\UserController@userEdit')->na
 Route::post('/user/userEdit', 'App\Http\Controllers\UserController@userUpdate')->name('user.userUpdate')->middleware('auth');
 
 Route::resource('users', 'App\Http\Controllers\UserController', ['only' => ['store','show','edit','update']]);
+
+
+
+
+// 画像保存用
+Route::post('/posts/temp', 'App\Http\Controllers\PostsController@image')->name('summernote.image');

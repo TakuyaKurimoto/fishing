@@ -34,6 +34,7 @@
                             :post="{{ json_encode($post)}}"
                         ></like-component>
             @endauth
+            
             </div>
 
             <section>
@@ -84,4 +85,6 @@
             </form>
         </div>
     </div>
+
+  
 @endsection

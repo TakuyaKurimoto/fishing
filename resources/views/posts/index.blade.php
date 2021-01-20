@@ -33,7 +33,7 @@
                 </div>
             </div>
         @endforeach 
-　　　　　〜人気記事ランキングここまで〜
+　　　　　
     </div>
 　　
    <div class="col-md-8">

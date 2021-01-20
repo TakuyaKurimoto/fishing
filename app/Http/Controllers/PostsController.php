@@ -51,7 +51,8 @@ class PostsController extends Controller
     public function create()
     {
     
-        return view('posts.create');
+        //return view('posts.create');
+        return view('posts.summernote');
     }
 
     /**
@@ -62,6 +63,10 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        
+        
+        
+        
         $id = Auth::id();
         //インスタンス作成
         $request->validate([
@@ -78,6 +83,7 @@ class PostsController extends Controller
         $post->title = $request->title;
         $post->tag = $request->tag;
         $post->save();
+        
 
        return redirect()->to('/');
     }
@@ -153,9 +159,18 @@ class PostsController extends Controller
         $post->delete();
     });    
     return redirect()->to('/');
+
     }
    
    
+    public function image (Request $request){
+        $result=$request->file('file')->isValid();
+        if($result){
+            $filename = $request->file->getClientOriginalName();
+            $file=$request->file('file')->move('temp', $filename);
+            echo '/temp/'.$filename;
+        }
+    }
     
 
 

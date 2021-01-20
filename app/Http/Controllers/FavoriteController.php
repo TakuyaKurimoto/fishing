@@ -44,6 +44,8 @@ class FavoriteController extends Controller
             'result' => $result, 
             'count' => $count,  
         ]);
+
+        
     }
 
 
