@@ -7,30 +7,48 @@ jobs:
   build:
     docker:
       # Specify the version you desire here
-      - image: circleci/php:7.1-node-browsers
-      - image: circleci/mysql:8.0.22
-      environment:
+      - image: circleci/php:7.3-node-browsers
+
+      - image: circleci/mysql:5.7-ram
+    environment:
       - DB_CONNECTION: circle_testing
-      working_directory: ~/ci-demo
-      steps:
-        - checkout
-        - run:
-            name: Update apt-get
-            command: sudo apt-get update
-        - run:
-            name: Docker php extensions install
-            command: sudo docker-php-ext-install pdo_mysql
-        - restore_cache:
-            keys:
-              - v1-dependencies-{{ checksum "composer.json" }}
-              - v1-dependencies-
-        - run:
-            name: Install PHP libraries
-            command: composer install -n --prefer-dist
-        - save_cache:
-            paths:
-              - ./vendor
-            key: v1-dependencies-{{ checksum "composer.json" }}
-        - run:
-            name: Run PHPUnit
-            command: vendor/bin/phpunit
+    steps:
+      - checkout
+      - run:
+          name: Update apt-get
+          command: sudo apt-get update
+      - run:
+          name: Docker php extensions install
+          command: sudo docker-php-ext-install pdo_mysql
+      - run: composer install -n --prefer-dist --working-dir=./backend
+
+      - run: php ./backend/artisan --env=testing
+      - run:
+          working_directory: ~/backend
+          command: php artisan migrate
+      - run: php ./backend/vendor/bin/phpunit --configuration=./backend/phpunit.xml
+  # deploy ジョブ: EC2 に SSH 接続して、デプロイを実行する
+  deploy:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - checkout
+        # CircleCI に登録した秘密鍵を呼び出す
+      - add_ssh_keys:
+        # CircleCI に登録した環境変数を使って SSH
+      - run: ssh takuya004869@takuya004869.sakura.ne.jp 'cd fishing && git pull'
+workflows:
+  version: 2
+  # build_and_deploy ジョブ: 一番最初に呼ばれるジョブ
+  build_and_deploy:
+    # build ジョブと deploy ジョブを呼び出す
+    jobs:
+      - build
+      - deploy:
+          requires:
+            # deploy ジョブより先に build ジョブを実行しろ、という命令
+            - build
+          # master ブランチに push された場合のみ deploy ジョブを実行する
+          filters:
+            branches:
+              only: master
