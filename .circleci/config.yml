@@ -11,6 +11,8 @@ jobs:
       - checkout
         # CircleCI に登録した秘密鍵を呼び出す
       - add_ssh_keys:
+          fingerprints:
+            - "7b:4a:29:aa:59:27:55:83:76:a9:1d:40:00:4b:5e:42"
         # CircleCI に登録した環境変数を使って SSH
       - run: ssh takuya004869@takuya004869.sakura.ne.jp 'cd fishing && git pull'
 workflows:
