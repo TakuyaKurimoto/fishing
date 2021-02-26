@@ -3,7 +3,7 @@
 @section('kensaku')
 
 <form action="{{url('/')}}" method="GET">
-<input type="text" name="keyword" placeholder="タグ検索"　value="{{$keyword}}"><input type="submit" value="検索">&nbsp; 
+<input type="text" name="keyword" placeholder="タグで検索"　value="{{$keyword}}"><input type="submit" value="検索">&nbsp; 
 </form>
 
 @endsection
