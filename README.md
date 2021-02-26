@@ -4,7 +4,7 @@ http://takuya004869.sakura.ne.jp/ （https通信ではないですごめんな�
 制作期間は1ヶ月。laravelがどうやって動いているのか知りたかったのでまずチュートリアルをやって、そこから色々な機能を付けたしていった感じです。<br>
 <h2>サイトイメージ</h2>
 
-
+<img width="1233" alt="スクリーンショット 2021-02-26 10 29 34" src="https://user-images.githubusercontent.com/75765648/109242523-9c34f380-781e-11eb-8716-be920357f61f.png">
 <img width="632" alt="スクリーンショット 2021-01-17 23 39 45" src="https://user-images.githubusercontent.com/75765648/109241470-c8e80b80-781c-11eb-8262-a6bd8f669600.png">
 
 <h2>使用技術</h2>
