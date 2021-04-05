@@ -13,49 +13,32 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index(Request $request){
-        
-        $authUser = Auth::user();
-        $users = User::all();
-        $param = [
-            'authUser'=>$authUser,
-            'users'=>$users
-        ];
-        $name = $request->Name;
-        
-        //$usr_id = $request->user()
-        //$user = DB::table('users')->where('id', $usr_id)->first();
-        
-        return view('user.index',$param);
-    }
+    
 
     public function userEdit(Request $request){
         $authUser = Auth::user();
-        $param = [
-            'authUser'=>$authUser,
-        ];
-        return view('user.userEdit',$param);
+
+        return view('user.userEdit',compact('authUser'));
     }
 
+    
+    public function show($id)
+    {
+        
+        $user = User::findOrFail($id);
+        $posts = Post::where('user_id', $id)->orderBy('created_at', 'desc')->paginate(5);
+       
+
+        return view('user.show',compact('posts', 'user'));
+    }
     public function userUpdate(Request $request){
         // Validator check
-        $rules = [
-            'user_id' => 'integer|required',
+        $request->validate([
             'name' => 'required',
-        ];
-        $messages = [
-            'user_id.integer' => 'SystemError:システム管理者にお問い合わせください',
-            'user_id.required' => 'SystemError:システム管理者にお問い合わせください',
-            'name.required' => 'ユーザー名が未入力です',
-        ];
-        $validator = Validator::make($request->all(),$rules,$messages);
-
-        if($validator->fails()){
-            return redirect('/user/userEdit')
-                ->withErrors($validator)
-                ->withInput();
-        }
-
+            'thumbnail' => 'file|image|mimes:png,jpeg'
+        ]);
+        
+    
         $uploadfile = $request->file('thumbnail');
 
           if(!empty($uploadfile)){
@@ -65,26 +48,17 @@ class UserController extends Controller
             $param = [
                 'name'=>$request->name,
                 'thumbnail'=>$thumbnailname,
+                
             ];
           }else{
                $param = [
                     'name'=>$request->name,
+                    
                ];
           }
-
-        User::where('id',$request->user_id)->update($param);
+        $id = Auth::id();
+        User::where('id',$id)->update($param);
         return redirect(route('user.userEdit'))->with('success', '保存しました。');
-    }
-    public function show($id)
-    {
-        
-        $user = User::findOrFail($id);
-        
-        $user_id = $user->id;
-        $posts = Post::where('user_id', $user_id)->orderBy('created_at', 'desc')->paginate(5);
-       
-
-        return view('user.show',compact('posts', 'user'));
     }
 }
 

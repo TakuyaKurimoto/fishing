@@ -37,9 +37,9 @@ class FavoriteController extends Controller
     public function store($id)
     {
         $post = Post::find($id);
-        $post->users()->attach(Auth::id());
+        $post->users()->attach(Auth::id());//対応する投稿とユーザーを紐付ける
         $count = $post->users()->count(); 
-        $result = true; //追加
+        $result = true; 
         return response()->json([
             'result' => $result, 
             'count' => $count,  

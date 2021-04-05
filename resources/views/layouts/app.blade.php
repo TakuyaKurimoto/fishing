@@ -9,7 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>App掲示板 - @yield('title')@yield('kensaku') </title>
+    <title>釣り掲示板 - @yield('title')</title>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"
@@ -75,7 +75,7 @@
                                 <a class="dropdown-item" href="{{ route('home') }}">
                                     {{ __('Home') }}
                                 </a>
-                                <a class="dropdown-item" href="{{ route('user.index') }}">
+                                <a class="dropdown-item" href="{{ route('users.show',Auth::user()->id )}}">
                                     {{ __('UserInformation') }}
                                 </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();

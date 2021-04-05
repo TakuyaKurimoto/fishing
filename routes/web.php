@@ -32,9 +32,8 @@ Route::get('posts/{post}/unfavorites', 'App\Http\Controllers\FavoriteController@
 Route::get('posts/{post}/countfavorites', 'App\Http\Controllers\FavoriteController@count');
 Route::get('posts/{post}/hasfavorites', 'App\Http\Controllers\FavoriteController@hasfavorite');
 //参考https://idealive.jp/blog/2019/04/02/laravelでメール認証をやる/
-Route::resource('/user', 'App\Http\Controllers\UserController', ['only' => ['index']]);
-Route::get('/user/userEdit', 'App\Http\Controllers\UserController@userEdit')->name('user.userEdit')->middleware('auth');
-Route::post('/user/userEdit', 'App\Http\Controllers\UserController@userUpdate')->name('user.userUpdate')->middleware('auth');
+Route::get('/user/userEdit', 'App\Http\Controllers\UserController@userEdit')->name('user.userEdit');
+Route::post('/user/userEdit', 'App\Http\Controllers\UserController@userUpdate')->name('user.userUpdate');
 
 Route::resource('users', 'App\Http\Controllers\UserController', ['only' => ['store','show','edit','update']]);
 

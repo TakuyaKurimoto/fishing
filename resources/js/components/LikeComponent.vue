@@ -18,6 +18,7 @@
     </div>
 </template>
 <script>
+Vue.config.devtools = true;
     export default {
         props: ['post'],
         data() {
@@ -27,6 +28,7 @@
             }
         },
         mounted () {
+            console.log(this.post);
             this.hasfavorites();
             this.countfavorites(); //追加
         },

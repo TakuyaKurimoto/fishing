@@ -3,7 +3,7 @@
 @section('kensaku')
 
 <form action="{{url('/')}}" method="GET">
-<input type="text" name="keyword" placeholder="タグ検索"　value="{{$keyword}}"><input type="submit" value="検索">&nbsp; 
+<input type="text" name="keyword" placeholder="タグで検索"　value="{{$keyword}}"><input type="submit" value="検索">&nbsp; 
 </form>
 
 @endsection
@@ -48,6 +48,7 @@
                  </div>   
                  
                  
+                 
                 <div class="card-header">    
                     <a class="card-link" href="{{ route('posts.show', ['post' => $post]) }}">
                         {{ $post->title }}
@@ -60,9 +61,9 @@
                 
                 
                     
-                    @if ($post->comments->count())
+                    @if ($post->comments()->count())
                         <span class="badge badge-primary">
-                            コメント {{ $post->comments->count() }}件
+                            コメント {{ $post->comments()->count() }}件
                         </span>
                     @endif
                     　　

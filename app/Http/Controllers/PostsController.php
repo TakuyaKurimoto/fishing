@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Post;
-use App\Like;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+
 
 class PostsController extends Controller
 {
@@ -22,7 +21,8 @@ class PostsController extends Controller
         
 
         $query = Post::query();
-        $keyword = $request->input('keyword');
+        
+        $keyword = $request->keyword;
         if (!empty($keyword)) {
             $query->where('tag', 'LIKE', "%{$keyword}%");       
         
@@ -35,9 +35,9 @@ class PostsController extends Controller
         //参考https://qiita.com/Ioan/items/bac58de02b826ae8e9e9
         $countLike = Post::withCount('users')
         ->orderBy('users_count', 'desc')
+        ->take(5)
         ->get();
-
- 
+        
         return view('posts.index', compact('posts', 'keyword','countLike',));
         
         
@@ -64,9 +64,6 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         
-        
-        
-        
         $id = Auth::id();
         //インスタンス作成
         $request->validate([
@@ -75,7 +72,7 @@ class PostsController extends Controller
             'tag'  => 'required|max:50',
         ]);
 
-
+        
         $post = new Post();
         
         $post->body = $request->body;
@@ -83,9 +80,7 @@ class PostsController extends Controller
         $post->title = $request->title;
         $post->tag = $request->tag;
         $post->save();
-        
-
-       return redirect()->to('/');
+        return redirect()->to('/');
     }
 
     /**
@@ -98,9 +93,10 @@ class PostsController extends Controller
     {
         
         $post = Post::findOrFail($post_id);
-        $usr_id = $post->user_id;
-        $user = DB::table('users')->where('id', $usr_id)->first();
         
+        $usr_id = $post->user_id;
+        $user = User::where('id', $usr_id)->first();
+        //コメントテーブルの値も$postから参照できる
 
         return view('posts.show',['post' => $post,'user' => $user]);
     }
