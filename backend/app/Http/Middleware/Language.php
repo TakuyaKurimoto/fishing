@@ -3,12 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-
-use Illuminate\Support\Facades\Session;
-
-use Illuminate\Support\Facades\App;
 
 class Language
 {
@@ -21,10 +15,10 @@ class Language
      */
     public function handle($request, Closure $next)
     {
-        if (Session::has('applocale') and array_key_exists(Session::get('applocale'), Config::get('languages'))) {
-            App::setLocale(Session::get('applocale'));
+        if (session()->has('applocale') and array_key_exists(session()->get('applocale'), config()->get('languages'))) {
+            app()->setLocale(session()->get('applocale'));
         } else {
-            App::setLocale(Config::get('app.fallback_locale'));
+            app()->setLocale(config()->get('app.fallback_locale'));
         }
         
         return $next($request);
