@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -20,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
@@ -31,19 +30,19 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    釣り掲示板 
-                    
+                    釣り掲示板
+
                 </a>
-                
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-               <div> 
-               @yield('kensaku')
-               </div>
-                
+                <div>
+                    @yield('kensaku')
+                </div>
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
@@ -55,6 +54,23 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
+
+                        <li class="nav-item dropdown" id="nav-lang">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+
+                                {{ Config::get('languages')[App::getLocale()] }}
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                @foreach (Config::get('languages') as $lang => $language)
+                                @if ($lang != App::getLocale())
+                                <li>
+                                    <a href="{{ route('lang.switch', $lang) }}">{{$language}}</a>
+                                </li>
+                                @endif
+                                @endforeach
+                            </ul>
+                        </li>
+
                         @guest
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">{{ __('ログイン') }}</a>
@@ -92,16 +108,16 @@
                         @endguest
                     </ul>
                 </div>
-                
+
             </div>
         </nav>
-        
-        
+
+
 
         <main id="mainpart" class="py-4">
-        
+
             @yield('content')
-        
+
         </main>
     </div>
     @include('layouts.app_script')

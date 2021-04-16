@@ -14,10 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes(['verify' => true]);
 
-Route::middleware('verified')->group(function() {
-// 本登録していないとアクセスできないURL
+Route::middleware('verified')->group(function () {
+    // 本登録していないとアクセスできないURL
 });
     
+Route::get('lang/{lang}', ['as'=>'lang.switch', 'uses'=>'App\Http\Controllers\LanguageController@switchLang']);
+
 
 Route::get('/', 'App\Http\Controllers\PostsController@index')->name('top');
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
