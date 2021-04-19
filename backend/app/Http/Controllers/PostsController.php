@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
-
 
 class PostsController extends Controller
 {
@@ -18,17 +17,14 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-        
-
         $query = Post::query();
         
         $keyword = $request->keyword;
         if (!empty($keyword)) {
-            $query->where('tag', 'LIKE', "%{$keyword}%");       
+            $query->where('tag', 'LIKE', "%{$keyword}%");
         
             $posts = $query->orderBy('created_at', 'desc')->paginate(5);
-        }
-        else{
+        } else {
             $posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(5);
         }
         //記事をいいね数で並び替え
@@ -38,16 +34,14 @@ class PostsController extends Controller
         ->take(5)
         ->get();
         
-        return view('posts.index', compact('posts', 'keyword','countLike',));
-        
-        
+        return view('posts.index', compact('posts', 'keyword', 'countLike', ));
     }
 
-/**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    /**
+         * Show the form for creating a new resource.
+         *
+         * @return \Illuminate\Http\Response
+         */
     public function create()
     {
     
@@ -63,7 +57,6 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        
         $id = Auth::id();
         //インスタンス作成
         $request->validate([
@@ -91,14 +84,13 @@ class PostsController extends Controller
      */
     public function show($post_id)
     {
-        
         $post = Post::findOrFail($post_id);
         
         $usr_id = $post->user_id;
         $user = User::where('id', $usr_id)->first();
         //コメントテーブルの値も$postから参照できる
 
-        return view('posts.show',['post' => $post,'user' => $user]);
+        return view('posts.show', ['post' => $post,'user' => $user]);
     }
 
     /**
@@ -111,7 +103,7 @@ class PostsController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        return view('posts.edit',['post' => $post,'id' =>$id]);     
+        return view('posts.edit', ['post' => $post,'id' =>$id]);
     }
 
 
@@ -137,7 +129,6 @@ class PostsController extends Controller
         $post->save();
         
         return redirect()->to('/');
-        
     }
 
     /**
@@ -150,25 +141,21 @@ class PostsController extends Controller
     {
         $post = Post::findOrFail($post_id);
 
-    \DB::transaction(function () use ($post) {
-        $post->comments()->delete();
-        $post->delete();
-    });    
-    return redirect()->to('/');
-
+        \DB::transaction(function () use ($post) {
+            $post->comments()->delete();
+            $post->delete();
+        });
+        return redirect()->to('/');
     }
    
    
-    public function image (Request $request){
+    public function image(Request $request)
+    {
         $result=$request->file('file')->isValid();
-        if($result){
+        if ($result) {
             $filename = $request->file->getClientOriginalName();
             $file=$request->file('file')->move('temp', $filename);
             echo '/temp/'.$filename;
         }
     }
-    
-
-
 }
-
