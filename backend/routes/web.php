@@ -19,6 +19,11 @@ Route::middleware('verified')->group(function () {
 });
     
 Route::get('lang/{lang}', ['as'=>'lang.switch', 'uses'=>'App\Http\Controllers\LanguageController@switchLang']);
+Route::get('guest', 'App\Http\Controllers\Auth\LoginController@guestLogin')->name('login.guest');
+Route::get('sample/mailable/preview', function () {
+    return new App\Mail\SampleNotification();
+});
+Route::get('sample/mailable/send', 'App\Http\Controllers\SampleController@SampleNotification');
 
 
 Route::get('/', 'App\Http\Controllers\PostsController@index')->name('top');

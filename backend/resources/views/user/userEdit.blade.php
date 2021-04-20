@@ -6,10 +6,13 @@
     @if (session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+    @if (Auth::id() == 1)
+    <p class="text-danger">※ゲストユーザーは、ユーザー名とサムネイルを編集できません。</p>
+    @endif
 
     <div class="topWrapper">
         @if(!empty($authUser->thumbnail))
-            <img src="/storage/user/{{ $authUser->thumbnail }}" class="editThumbnail">
+        <img src="/storage/user/{{ $authUser->thumbnail }}" class="editThumbnail">
         @else
         画像なし
         @endif
@@ -18,7 +21,7 @@
     <form method="post" action="{{ route('user.userUpdate') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
 
-               
+
         <div class="labelTitle">Name</div>
         <div>
             <input type="text" class="userForm" name="name" placeholder="User" value="{{ $authUser->name }}">
@@ -34,7 +37,9 @@
         </div>
 
         <div class="buttonSet">
+            @if (Auth::id() !== 1)
             <input type="submit" name="send" value="ユーザー変更" class="btn btn-primary btn-sm btn-done">
+            @endif
             <a href="{{ route('users.show',$authUser) }}" class="btn btn-primary btn-sm">戻る</a>
         </div>
     </form>
