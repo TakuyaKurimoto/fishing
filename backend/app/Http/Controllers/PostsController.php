@@ -17,24 +17,33 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Post::query();
-        
         $keyword = $request->keyword;
         if (!empty($keyword)) {
-            $query->where('tag', 'LIKE', "%{$keyword}%");
-        
-            $posts = $query->orderBy('created_at', 'desc')->paginate(5);
+            $posts = $this->filterByTitle($keyword);
         } else {
             $posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(5);
         }
         //記事をいいね数で並び替え
         //参考https://qiita.com/Ioan/items/bac58de02b826ae8e9e9
-        $countLike = Post::withCount('users')
+        $popularArticles = $this->getPopularArticles();
+        
+        return view('posts.index', compact('posts', 'keyword', 'popularArticles', ));
+    }
+    private function filterByTitle($keyword)
+    {
+        $query = Post::query();
+        
+        
+        $query->where('title', 'LIKE', "%{$keyword}%");
+        
+        return $query->orderBy('created_at', 'desc')->paginate(5);
+    }
+    private function getPopularArticles()
+    {
+        return Post::withCount('users')
         ->orderBy('users_count', 'desc')
         ->take(5)
         ->get();
-        
-        return view('posts.index', compact('posts', 'keyword', 'countLike', ));
     }
 
     /**
@@ -46,7 +55,7 @@ class PostsController extends Controller
     {
     
         //return view('posts.create');
-        return view('posts.summernote');
+        return view('posts.create');
     }
 
     /**
@@ -59,10 +68,11 @@ class PostsController extends Controller
     {
         $id = Auth::id();
         //インスタンス作成
+        
         $request->validate([
             'title' => 'required|max:50',
             'body' => 'required|max:2000',
-            'tag'  => 'required|max:50',
+            'tag'  => 'required',
         ]);
 
         
@@ -71,7 +81,7 @@ class PostsController extends Controller
         $post->body = $request->body;
         $post->user_id = $id;
         $post->title = $request->title;
-        $post->tag = $request->tag;
+        $post->tag = serialize($request->tag);
         $post->save();
         return redirect()->to('/');
     }
